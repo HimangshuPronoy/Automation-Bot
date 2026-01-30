@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { db } from '@/lib/db';
 import { Button } from '@/components/ui/button';
@@ -116,7 +116,51 @@ export default function OnboardingPage() {
           <CardContent className="space-y-6">
             {/* Step 1: Company Info */}
             {step === 1 && (
-              <div className="space-y-4">
+              <div className="space-y-6">
+                
+                {/* Auto-Import Feature */}
+                <div className="bg-slate-900/50 p-4 rounded-xl border border-slate-700">
+                    <label className="text-sm font-semibold text-purple-400 mb-2 block flex items-center gap-2">
+                       <Brain size={14} /> Auto-Fill from Website
+                    </label>
+                    <div className="flex gap-2">
+                      <Input
+                        placeholder="https://your-company.com"
+                        id="import-url"
+                        className="bg-slate-900 border-slate-600 text-white"
+                      />
+                      <Button 
+                        size="sm"
+                        variant="secondary"
+                        onClick={async () => {
+                          const urlInput = document.getElementById('import-url') as HTMLInputElement;
+                          if (!urlInput?.value) return;
+                          
+                          setLoading(true);
+                          try {
+                             const res = await fetch('/api/scrape', {
+                                method: 'POST',
+                                body: JSON.stringify({ url: urlInput.value }),
+                             });
+                             const data = await res.json();
+                             if (data.company_name) setCompanyName(data.company_name);
+                             if (data.services) setServices(data.services);
+                             // Could also set description/value prop into a state if we had it
+                             
+                             // Clean up mock packages? Or update them?
+                             
+                          } catch (e) {
+                             console.error(e);
+                          } finally {
+                             setLoading(false);
+                          }
+                        }}
+                      >
+                         {loading ? <Loader2 className="animate-spin w-4 h-4"/> : "Import"}
+                      </Button>
+                    </div>
+                </div>
+
                 <div>
                   <label className="text-sm text-slate-300 mb-2 block">Company Name</label>
                   <Input

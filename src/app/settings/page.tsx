@@ -70,7 +70,7 @@ export default function SettingsPage() {
           if (Array.isArray(items)) {
             setKnowledgeItems(items);
           }
-        } catch (e) {
+        } catch {
           // Fallback if parsing fails
           setKnowledgeItems([{ id: '1', topic: 'General', content: settingsData.value_proposition }]);
         }
@@ -121,19 +121,49 @@ export default function SettingsPage() {
   };
 
   // Knowledge Base Functions
-  const scanWebsite = () => {
+  const scanWebsite = async () => {
     if (!websiteUrl) return;
     setScanning(true);
-    // Mock website scanning
-    setTimeout(() => {
-      const newItems = [
-        { id: Date.now().toString() + '1', topic: 'About Us', content: `Information extracted from ${websiteUrl}: Leading provider of industry solutions.` },
-        { id: Date.now().toString() + '2', topic: 'Pricing', content: 'Standard package starts at $99/mo. Premium at $299/mo.' },
-      ];
-      setKnowledgeItems(prev => [...prev, ...newItems]);
+    
+    try {
+      const response = await fetch('/api/scrape', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url: websiteUrl })
+      });
+      
+      if (!response.ok) throw new Error('Failed to analyze website');
+      
+      const data = await response.json();
+      
+      // Update state with scraped data
+      if (data.company_name) {
+        setSettings(prev => ({
+          ...prev,
+          company_name: data.company_name,
+          services: [...(prev.services || []), ...(data.services || [])].filter((v, i, a) => a.indexOf(v) === i), // unique
+          value_proposition: prev.value_proposition || data.value_proposition
+        }));
+      }
+
+      if (data.knowledge_items) {
+        setKnowledgeItems(prev => [
+          ...prev,
+          ...data.knowledge_items.map((item: { topic: string; content: string }) => ({
+            id: Date.now().toString() + Math.random().toString(),
+            topic: item.topic,
+            content: item.content
+          }))
+        ]);
+      }
+      
+      toast.success('Website analyzed successfully!');
+    } catch (error) {
+      toast.error('Failed to scan website. Please try again.');
+      console.error(error);
+    } finally {
       setScanning(false);
-      toast.success('Website scanned and knowledge added!');
-    }, 2000);
+    }
   };
 
   const addKnowledgeItem = () => {
@@ -309,7 +339,7 @@ export default function SettingsPage() {
                     </Button>
                   </div>
                   <p className="text-xs text-slate-500">
-                    We&apos;ll analyze your website and automatically extract key business information.
+                    Our AI will analyze your website to extract your Company Name, Services, and key information automatically.
                   </p>
                 </div>
 
