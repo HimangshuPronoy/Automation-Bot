@@ -17,7 +17,7 @@ export async function createCampaign(name: string, query: string, description?: 
 
     // 2. Create scrape job for this campaign
     const { error: jobError } = await db.from('scrape_jobs').insert({
-      campaign_id: campaign.id,
+      campaignId: campaign.id,
       query,
       status: 'PENDING'
     });
