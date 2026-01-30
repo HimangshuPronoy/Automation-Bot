@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Globe, Bot, Phone, BarChart3, ChevronRight, Play, Check, Star } from 'lucide-react';
 import { motion } from 'framer-motion';
