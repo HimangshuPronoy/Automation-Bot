@@ -55,6 +55,7 @@ export default function LoginPage() {
       }
     } catch (err) {
       const message = err instanceof Error ? err.message : 'An error occurred';
+      console.error('Auth Error:', err); // Debug log
       toast.error(message);
     } finally {
       setLoading(false);
