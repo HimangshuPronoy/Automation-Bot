@@ -59,7 +59,7 @@ export default function LandingPage() {
 
       {/* Main Hero Section - WRAPPED IN GRAY CARD */}
       <section className="px-4 pt-24 pb-4">
-        <div className="max-w-[1400px] mx-auto bg-slate-200/80 rounded-[3rem] p-8 md:p-16 overflow-hidden relative min-h-[85vh] flex items-center">
+        <div className="max-w-[1400px] mx-auto bg-[#e8e9eb] rounded-[3rem] p-8 md:p-16 overflow-hidden relative min-h-[85vh] flex items-center shadow-sm">
             
             {/* Background texture/noise if needed */}
             <div className="absolute inset-0 opacity-[0.03] bg-[url('https://www.transparenttextures.com/patterns/noise.png')]"></div>
@@ -85,7 +85,7 @@ export default function LandingPage() {
                 </div>
 
                 {/* Headline */}
-                <h1 className={`${playfair.className} text-8xl lg:text-[9rem] leading-[0.85] font-normal text-slate-900 mb-12 tracking-tight`}>
+                <h1 className={`${playfair.className} text-8xl lg:text-[9rem] leading-[0.85] font-medium text-black mb-12 tracking-tight`}>
                   Grow<sup className="text-6xl font-light font-sans top-[-0.5em]">+</sup>
                 </h1>
 
@@ -184,13 +184,14 @@ export default function LandingPage() {
             </div>
 
 
-            {/* Logos at Bottom of Card */}
-            <div className="absolute bottom-8 left-0 right-0 px-16 flex justify-between items-center opacity-70 grayscale">
-                {['Rakuten', 'NCR', 'monday.com', 'Disney', 'Dropbox'].map(logo => (
-                    <span key={logo} className="text-xl font-bold text-slate-900">{logo}</span>
-                ))}
             </div>
 
+
+        {/* Logos Ticker - Outside the Gray Card */}
+        <div className="max-w-[1400px] mx-auto mt-12 flex flex-wrap justify-between items-center px-8 opacity-70 grayscale hover:grayscale-0 transition-all duration-500">
+            {['Rakuten', 'NCR', 'monday.com', 'Disney', 'Dropbox'].map(logo => (
+                <span key={logo} className="text-xl font-bold text-slate-900">{logo}</span>
+            ))}
         </div>
       </section>
 
