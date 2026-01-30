@@ -221,11 +221,11 @@ export async function callLead(leadId: string): Promise<{ success: boolean; call
     return { success: false, error: 'Lead not found' };
   }
 
-  // Database uses snake_case
-  const phoneNumber = lead.phone_number;
-  const businessName = lead.business_name;
-  const weakPointsRaw = lead.weak_points;
-  const suggestedPitch = lead.suggested_pitch;
+  // Database uses camelCase
+  const phoneNumber = lead.phoneNumber;
+  const businessName = lead.businessName;
+  const weakPointsRaw = lead.weakPoints;
+  const suggestedPitch = lead.suggestedPitch;
 
   if (!phoneNumber) {
     return { success: false, error: 'Lead has no phone number' };

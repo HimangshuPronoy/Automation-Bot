@@ -14,16 +14,16 @@ import { formatDistanceToNow } from 'date-fns';
 
 interface Lead {
   id: string;
-  business_name: string;
-  phone_number: string;
+  businessName: string;
+  phoneNumber: string;
   email?: string;
   website?: string;
   address?: string;
   rating?: number;
-  review_count?: number;
+  reviewCount?: number;
   status: string;
-  created_at: string;
-  campaign_id?: string;
+  createdAt: string;
+  campaignId?: string;
   campaigns?: { name: string } | null;
 }
 
@@ -42,7 +42,7 @@ export default function LeadsPage() {
     const { data, error } = await supabase
       .from('leads')
       .select('*, campaigns(name)')
-      .order('created_at', { ascending: false });
+      .order('createdAt', { ascending: false });
 
     if (!error && data) {
       setLeads(data as Lead[]);
@@ -51,8 +51,8 @@ export default function LeadsPage() {
   };
 
   const filteredLeads = leads.filter(lead => {
-    const matchesSearch = lead.business_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          lead.phone_number?.includes(searchQuery) ||
+    const matchesSearch = lead.businessName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                          lead.phoneNumber?.includes(searchQuery) ||
                           lead.email?.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesStatus = statusFilter === 'ALL' || lead.status === statusFilter;
     return matchesSearch && matchesStatus;
@@ -176,18 +176,18 @@ export default function LeadsPage() {
                       >
                         {/* Avatar */}
                         <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center font-bold text-lg text-slate-600 group-hover:scale-105 transition-transform">
-                          {lead.business_name?.charAt(0).toUpperCase() || '?'}
+                          {lead.businessName?.charAt(0).toUpperCase() || '?'}
                         </div>
 
                         {/* Info */}
                         <div className="flex-1 min-w-0">
                           <p className="font-semibold text-slate-900 truncate group-hover:text-indigo-600 transition-colors">
-                            {lead.business_name || 'Unknown Business'}
+                            {lead.businessName || 'Unknown Business'}
                           </p>
                           <div className="flex items-center gap-4 text-sm text-slate-500">
-                            {lead.phone_number && (
+                            {lead.phoneNumber && (
                               <span className="flex items-center gap-1">
-                                <Phone size={12} /> {lead.phone_number}
+                                <Phone size={12} /> {lead.phoneNumber}
                               </span>
                             )}
                             {lead.address && (
@@ -220,7 +220,7 @@ export default function LeadsPage() {
 
                         {/* Time */}
                         <span className="text-xs text-slate-400 hidden md:block w-24 text-right">
-                          {getTimeAgo(lead.created_at)}
+                          {getTimeAgo(lead.createdAt)}
                         </span>
 
                         <ChevronRight className="w-5 h-5 text-slate-300 group-hover:text-indigo-500 transition-colors" />

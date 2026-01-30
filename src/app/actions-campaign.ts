@@ -37,14 +37,13 @@ export async function getCampaigns() {
     const { data: campaigns, error } = await db
       .from('campaigns')
       .select('*, leads:leads(count), jobs:scrape_jobs(status)')
-      .order('created_at', { ascending: false });
+      .order('createdAt', { ascending: false });
 
     if (error) throw error;
 
     // Transform for UI
-    const transformed = campaigns?.map((c: { id: string; name: string; query: string; description?: string; created_at: string; leads?: { count: number }[]; jobs?: { status: string }[] }) => ({
+    const transformed = campaigns?.map((c: { id: string; name: string; query: string; description?: string; createdAt: string; leads?: { count: number }[]; jobs?: { status: string }[] }) => ({
       ...c,
-      createdAt: c.created_at,
       _count: { leads: c.leads?.[0]?.count || 0 },
       jobStatus: c.jobs?.[0]?.status || 'NONE'
     }));
@@ -61,12 +60,12 @@ export async function getCampaignLeads(campaignId: string) {
     const { data: leads, error } = await db
       .from('leads')
       .select('*')
-      .eq('campaign_id', campaignId)
-      .order('created_at', { ascending: false });
+      .eq('campaignId', campaignId)
+      .order('createdAt', { ascending: false });
 
     if (error) throw error;
     return { success: true, data: leads };
-  } catch (e) {
+  } catch {
     return { error: 'Failed to fetch leads' };
   }
 }
