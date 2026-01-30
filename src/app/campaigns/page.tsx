@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Plus, Play, Loader2, BarChart, RefreshCw, Megaphone, Users, Zap } from 'lucide-react';
+import { Plus, Play, Loader2, RefreshCw, Megaphone, Users, Zap } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { AnimatedBackground } from '@/components/ui/animated-background';
@@ -40,19 +40,19 @@ export default function CampaignsPage() {
   const [loading, setLoading] = useState(false);
   const [processing, setProcessing] = useState(false);
 
-  useEffect(() => {
-    loadCampaigns();
-  }, []);
-
   const loadCampaigns = async () => {
     const res = await getCampaigns();
     if (res.success) setCampaigns(res.data || []);
   };
 
+  useEffect(() => {
+    loadCampaigns();
+  }, []);
+
   const handleCreate = async () => {
     if (!newCampaignName || !newCampaignQuery) return;
     setLoading(true);
-    const res = await createCampaign(newCampaignName, newCampaignQuery, undefined, autoCallEnabled);
+    const res = await createCampaign(newCampaignName, newCampaignQuery);
     if (res.error) {
       toast.error('Failed to create campaign');
       setLoading(false);
@@ -93,7 +93,7 @@ export default function CampaignsPage() {
 
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
           <div>
             <h1 className="text-4xl md:text-5xl font-bold text-slate-900 dark:text-white tracking-tight">
               Campaigns
@@ -102,72 +102,90 @@ export default function CampaignsPage() {
               Create campaigns to find and qualify leads automatically
             </p>
           </div>
-          <div className="flex gap-3">
-            <Button 
-              variant="outline" 
-              onClick={handleProcess} 
-              disabled={processing}
-              className="rounded-full h-12 px-6 bg-white/80 backdrop-blur-md border-slate-200 hover:bg-slate-50"
-            >
-              {processing ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <RefreshCw className="mr-2 h-4 w-4"/>}
-              Process Jobs
-            </Button>
-            <Dialog open={isOpen} onOpenChange={setIsOpen}>
-              <DialogTrigger asChild>
-                <Button className="rounded-full h-12 px-8 bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-500/20 transition-all hover:scale-105">
-                  <Plus className="mr-2 h-5 w-5"/>
-                  New Campaign
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="rounded-[2rem] border-none shadow-2xl bg-white/95 backdrop-blur-xl">
-                <DialogHeader>
-                  <DialogTitle className="text-2xl font-bold text-slate-800">Create New Campaign</DialogTitle>
-                </DialogHeader>
-                <div className="space-y-4 py-4">
-                  <div>
-                    <label className="text-sm font-medium text-slate-700 mb-2 block">Campaign Name</label>
-                    <Input 
-                      placeholder="e.g. Austin Plumbers" 
-                      value={newCampaignName}
-                      onChange={(e) => setNewCampaignName(e.target.value)}
-                      className="h-12 rounded-xl"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium text-slate-700 mb-2 block">Search Query</label>
-                    <Input 
-                      placeholder="e.g. Plumbers in Austin, TX" 
-                      value={newCampaignQuery}
-                      onChange={(e) => setNewCampaignQuery(e.target.value)}
-                      className="h-12 rounded-xl"
-                    />
-                  </div>
-                  <div className="flex items-center space-x-3 p-4 bg-indigo-50 rounded-2xl border border-indigo-100">
-                    <input
-                      type="checkbox"
-                      id="autoCall"
-                      checked={autoCallEnabled}
-                      onChange={(e) => setAutoCallEnabled(e.target.checked)}
-                      className="h-5 w-5 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
-                    />
-                    <label htmlFor="autoCall" className="text-sm font-medium text-slate-700">
-                      <Zap className="inline-block h-4 w-4 mr-1 text-indigo-500" />
-                      Auto-Call qualified leads (AI will call them automatically)
-                    </label>
-                  </div>
-                  <Button 
-                    className="w-full h-14 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-lg shadow-lg shadow-indigo-500/25" 
-                    onClick={handleCreate} 
-                    disabled={loading}
-                  >
-                    {loading ? <Loader2 className="mr-2 h-5 w-5 animate-spin"/> : <Play className="mr-2 h-5 w-5"/>}
-                    {loading ? 'Creating...' : 'Create & Start Scraping'}
-                  </Button>
-                </div>
-              </DialogContent>
-            </Dialog>
-          </div>
+          <Button 
+            variant="outline" 
+            onClick={handleProcess} 
+            disabled={processing}
+            className="rounded-full h-12 px-6 bg-white/80 backdrop-blur-md border-slate-200 hover:bg-slate-50"
+          >
+            {processing ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <RefreshCw className="mr-2 h-4 w-4"/>}
+            Process Jobs
+          </Button>
         </div>
+
+        {/* BIG Hero CTA Card */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-8"
+        >
+          <Card className="rounded-[2rem] border-none shadow-xl bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 overflow-hidden">
+            <CardContent className="p-8 md:p-10">
+              <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                <div className="text-white text-center md:text-left">
+                  <h2 className="text-2xl md:text-3xl font-bold mb-2">🚀 Start Collecting Leads</h2>
+                  <p className="text-white/80 text-lg max-w-lg">
+                    Enter a search query like &quot;Plumbers in Austin&quot; and we&apos;ll scrape Google Maps for leads, analyze them with AI, and auto-call the best ones!
+                  </p>
+                </div>
+                <Dialog open={isOpen} onOpenChange={setIsOpen}>
+                  <DialogTrigger asChild>
+                    <Button className="rounded-full h-14 px-10 bg-white text-indigo-600 hover:bg-slate-100 shadow-2xl shadow-black/20 font-bold text-lg transition-all hover:scale-105 shrink-0">
+                      <Plus className="mr-2 h-6 w-6"/>
+                      New Campaign
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="rounded-[2rem] border-none shadow-2xl bg-white/95 backdrop-blur-xl">
+                    <DialogHeader>
+                      <DialogTitle className="text-2xl font-bold text-slate-800">Create New Campaign</DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-4 py-4">
+                      <div>
+                        <label className="text-sm font-medium text-slate-700 mb-2 block">Campaign Name</label>
+                        <Input 
+                          placeholder="e.g. Austin Plumbers" 
+                          value={newCampaignName}
+                          onChange={(e) => setNewCampaignName(e.target.value)}
+                          className="h-12 rounded-xl"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-slate-700 mb-2 block">Search Query (Google Maps)</label>
+                        <Input 
+                          placeholder="e.g. Plumbers in Austin, TX" 
+                          value={newCampaignQuery}
+                          onChange={(e) => setNewCampaignQuery(e.target.value)}
+                          className="h-12 rounded-xl"
+                        />
+                      </div>
+                      <div className="flex items-center space-x-3 p-4 bg-indigo-50 rounded-2xl border border-indigo-100">
+                        <input
+                          type="checkbox"
+                          id="autoCall"
+                          checked={autoCallEnabled}
+                          onChange={(e) => setAutoCallEnabled(e.target.checked)}
+                          className="h-5 w-5 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                        />
+                        <label htmlFor="autoCall" className="text-sm font-medium text-slate-700">
+                          <Zap className="inline-block h-4 w-4 mr-1 text-indigo-500" />
+                          Auto-Call qualified leads (AI will call them automatically)
+                        </label>
+                      </div>
+                      <Button 
+                        className="w-full h-14 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-lg shadow-lg shadow-indigo-500/25" 
+                        onClick={handleCreate} 
+                        disabled={loading}
+                      >
+                        {loading ? <Loader2 className="mr-2 h-5 w-5 animate-spin"/> : <Play className="mr-2 h-5 w-5"/>}
+                        {loading ? 'Creating...' : 'Create & Start Scraping'}
+                      </Button>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
 
         {/* Stats */}
         <div className="flex gap-4 mb-8 flex-wrap">

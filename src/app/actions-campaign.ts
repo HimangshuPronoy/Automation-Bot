@@ -3,22 +3,21 @@
 import { db } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 
-export async function createCampaign(name: string, query: string, description?: string, autoCallEnabled: boolean = false) {
+export async function createCampaign(name: string, query: string, description?: string) {
   try {
     // 1. Create campaign
     const { data: campaign, error: campaignError } = await db.from('campaigns').insert({
       name,
       description,
       query,
-      status: 'ACTIVE',
-      auto_call_enabled: autoCallEnabled
+      status: 'ACTIVE'
     }).select().single();
 
     if (campaignError) throw campaignError;
 
     // 2. Create scrape job for this campaign
     const { error: jobError } = await db.from('scrape_jobs').insert({
-      campaignId: campaign.id,
+      campaign_id: campaign.id,
       query,
       status: 'PENDING'
     });
@@ -38,13 +37,14 @@ export async function getCampaigns() {
     const { data: campaigns, error } = await db
       .from('campaigns')
       .select('*, leads:leads(count), jobs:scrape_jobs(status)')
-      .order('createdAt', { ascending: false });
+      .order('created_at', { ascending: false });
 
     if (error) throw error;
 
     // Transform for UI
-    const transformed = campaigns?.map((c: any) => ({
+    const transformed = campaigns?.map((c: { id: string; name: string; query: string; description?: string; created_at: string; leads?: { count: number }[]; jobs?: { status: string }[] }) => ({
       ...c,
+      createdAt: c.created_at,
       _count: { leads: c.leads?.[0]?.count || 0 },
       jobStatus: c.jobs?.[0]?.status || 'NONE'
     }));
@@ -61,8 +61,8 @@ export async function getCampaignLeads(campaignId: string) {
     const { data: leads, error } = await db
       .from('leads')
       .select('*')
-      .eq('campaignId', campaignId)
-      .order('createdAt', { ascending: false });
+      .eq('campaign_id', campaignId)
+      .order('created_at', { ascending: false });
 
     if (error) throw error;
     return { success: true, data: leads };
