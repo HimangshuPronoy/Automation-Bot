@@ -106,7 +106,7 @@ export async function processJob(jobId: string) {
         const { data: byPhone } = await db
           .from('leads')
           .select('id')
-          .eq('phoneNumber', result.phone)
+          .eq('phone_number', result.phone)
           .limit(1);
         
         if (byPhone && byPhone.length > 0) {
@@ -120,7 +120,7 @@ export async function processJob(jobId: string) {
         const { data: byName } = await db
           .from('leads')
           .select('id')
-          .eq('businessName', result.title)
+          .eq('business_name', result.title)
           .limit(1);
         
         if (byName && byName.length > 0) {
@@ -148,19 +148,19 @@ export async function processJob(jobId: string) {
         console.error("Analysis failed for", result.title);
       }
 
-      // Save lead
+      // Save lead with snake_case field names
       await db.from('leads').insert({
-        businessName: result.title,
+        business_name: result.title,
         place_id: result.place_id,
-        phoneNumber: result.phone,
+        phone_number: result.phone,
         website: result.website,
         address: result.address,
         rating: result.rating,
-        reviewCount: result.reviews,
+        review_count: result.reviews,
         status: analysis?.qualified ? 'QUALIFIED' : 'NEW',
-        weakPoints: analysis ? JSON.stringify(analysis.weakPoints) : '[]',
-        suggestedPitch: analysis?.suggestedPitch || '',
-        campaignId: job.campaignId,
+        weak_points: analysis ? JSON.stringify(analysis.weakPoints) : '[]',
+        suggested_pitch: analysis?.suggestedPitch || '',
+        campaign_id: job.campaign_id,
       });
 
       savedCount++;
@@ -170,7 +170,7 @@ export async function processJob(jobId: string) {
     await db.from('scrape_jobs').update({
       status: 'COMPLETED',
       results_count: savedCount,
-      processedAt: new Date().toISOString(),
+      processed_at: new Date().toISOString(),
     }).eq('id', jobId);
 
   } catch (error) {
