@@ -68,7 +68,7 @@ export async function POST(req: NextRequest) {
     `;
 
     const { object } = await generateObject({
-      model: google('models/gemini-1.5-flash-latest'),
+      model: google('gemini-2.5-flash'),
       schema: CompanyInfoSchema,
       prompt: prompt,
     });
@@ -77,8 +77,13 @@ export async function POST(req: NextRequest) {
 
   } catch (error) {
     console.error('Scraping failed:', error);
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    // Log the stack trace for debugging
+    if (error instanceof Error && error.stack) {
+      console.error(error.stack);
+    }
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Failed to scrape website' },
+      { error: `Failed to scrape website: ${message}` },
       { status: 500 }
     );
   }

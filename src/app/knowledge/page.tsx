@@ -85,13 +85,16 @@ export default function KnowledgePage() {
         body: JSON.stringify({ url: websiteUrl })
       });
       
-      if (!response.ok) throw new Error('Failed to analyze website');
-      
       const data = await response.json();
+      
+      if (!response.ok) {
+        // Show the actual error from the API
+        throw new Error(data.error || 'Failed to analyze website');
+      }
       
       // We only care about knowledge items here, but usually we'd want to save company info too.
       // For this page, let's focus on the Q&A items.
-      if (data.knowledge_items) {
+      if (data.knowledge_items && data.knowledge_items.length > 0) {
         setKnowledgeItems(prev => [
           ...prev,
           ...data.knowledge_items.map((item: { topic: string; content: string }) => ({
@@ -106,8 +109,9 @@ export default function KnowledgePage() {
       }
       
     } catch (error) {
-      toast.error('Failed to scan website.');
-      console.error(error);
+      const msg = error instanceof Error ? error.message : 'Failed to scan website';
+      toast.error(msg);
+      console.error('Scan error:', error);
     } finally {
       setScanning(false);
     }

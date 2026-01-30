@@ -1,14 +1,23 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { supabase } from '@/lib/supabase-client';
 import { Phone, Zap, Play, Pause, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
+
+interface CurrentCall {
+  leadId: string;
+  businessName: string;
+  phoneNumber: string;
+  status: 'dialing' | 'connected' | 'ended';
+}
 
 export function AutoCallToggle() {
   const [isActive, setIsActive] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [pendingCount, setPendingCount] = useState(0);
+  const [currentCall, setCurrentCall] = useState<CurrentCall | null>(null);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     async function loadPendingCount() {
@@ -22,17 +31,78 @@ export function AutoCallToggle() {
     loadPendingCount();
   }, []);
 
+  const processNextCall = async () => {
+    // Get next NEW lead
+    const { data: leads } = await supabase
+      .from('leads')
+      .select('id, business_name, phone_number')
+      .eq('status', 'NEW')
+      .limit(1);
+    
+    if (!leads || leads.length === 0) {
+      setIsActive(false);
+      toast.info('All leads have been contacted!');
+      return;
+    }
+    
+    const lead = leads[0];
+    
+    // Update UI to show calling
+    setCurrentCall({
+      leadId: lead.id,
+      businessName: lead.business_name || 'Unknown Business',
+      phoneNumber: lead.phone_number || 'No phone',
+      status: 'dialing'
+    });
+    
+    try {
+      const res = await fetch('/api/call', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ leadId: lead.id })
+      });
+      
+      if (res.ok) {
+        setCurrentCall(prev => prev ? { ...prev, status: 'connected' } : null);
+        setPendingCount(prev => Math.max(0, prev - 1));
+      } else {
+        const err = await res.json();
+        console.error('Call failed:', err);
+      }
+    } catch (e) {
+      console.error('Call error:', e);
+    }
+  };
+
+  // Auto-call loop
+  useEffect(() => {
+    if (isActive && !intervalRef.current) {
+      processNextCall();
+      intervalRef.current = setInterval(processNextCall, 30000); // Every 30s
+    }
+    
+    if (!isActive && intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+      setCurrentCall(null);
+    }
+    
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isActive]);
+
   const toggleAutoCall = async () => {
     setIsLoading(true);
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise(resolve => setTimeout(resolve, 500));
     
     setIsActive(!isActive);
     setIsLoading(false);
     
     if (!isActive) {
       toast.success("Auto-Caller Activated", {
-        description: `Bot is now calling ${pendingCount} pending leads...`,
+        description: `Bot will now call ${pendingCount} pending leads...`,
       });
     } else {
       toast.info("Auto-Caller Paused");
@@ -63,6 +133,22 @@ export function AutoCallToggle() {
              <Phone className="text-white/80" size={24} />
           </div>
        </div>
+
+       {/* Current Call Display */}
+       {currentCall && (
+         <div className="relative z-10 mt-6 p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm">
+           <div className="flex items-center gap-3">
+             <div className={`w-3 h-3 rounded-full ${currentCall.status === 'dialing' ? 'bg-yellow-400 animate-pulse' : 'bg-green-400 animate-pulse'}`}></div>
+             <div className="flex-1">
+               <p className="text-sm font-medium text-white">{currentCall.businessName}</p>
+               <p className="text-lg font-mono text-emerald-400 tracking-wider">{currentCall.phoneNumber}</p>
+             </div>
+             <span className="text-xs uppercase tracking-wider text-slate-400 bg-white/10 px-2 py-1 rounded-full">
+               {currentCall.status}
+             </span>
+           </div>
+         </div>
+       )}
 
        <div className="relative z-10 mt-8">
           <button 

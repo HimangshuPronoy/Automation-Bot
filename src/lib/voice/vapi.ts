@@ -49,6 +49,8 @@ export async function initiateCall(options: VapiCallOptions): Promise<VapiCallRe
     customer: {
       number: options.phoneNumber,
     },
+    // Enable call recording
+    recordingEnabled: true,
   };
 
   // Use pre-configured assistant or dynamic prompt
