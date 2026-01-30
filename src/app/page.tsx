@@ -23,34 +23,30 @@ export default function LandingPage() {
   return (
     <div className={`min-h-screen bg-slate-50 font-sans text-slate-900 overflow-x-hidden ${playfair.variable} ${inter.variable}`}>
       
-      {/* Navbar - Clean & Centered */}
-      <nav className="fixed top-0 left-0 right-0 z-50 flex justify-center py-6 px-6 pointer-events-none">
-        <div className="w-full max-w-[1400px] flex justify-between items-center pointer-events-auto">
+      {/* Floating Glassmorphism Navbar */}
+      <nav className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-full max-w-5xl px-4">
+        <div className="bg-white/80 backdrop-blur-xl border border-white/30 shadow-lg rounded-full px-6 py-3 flex justify-between items-center">
            {/* Logo */}
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center text-white">
-               <span className="font-bold text-lg">/</span>
+            <div className="w-9 h-9 bg-black rounded-xl flex items-center justify-center text-white">
+               <Bot size={20} />
             </div>
-            <span className="text-lg font-bold text-slate-900">Sales@reelers.io</span>
+            <span className="text-lg font-bold text-slate-900">AutoSales</span>
           </div>
 
-          <div className="hidden md:flex items-center gap-8 font-medium text-sm text-slate-600">
-            <Link href="#product" className="hover:text-black transition-colors">Product</Link>
-            <span className="text-slate-300">.</span>
-            <Link href="#solutions" className="hover:text-black transition-colors">Solutions</Link>
-             <span className="text-slate-300">.</span>
+          <div className="hidden md:flex items-center gap-6 font-medium text-sm text-slate-600">
+            <Link href="#features" className="hover:text-black transition-colors">Features</Link>
+            <Link href="#how-it-works" className="hover:text-black transition-colors">How it Works</Link>
             <Link href="#pricing" className="hover:text-black transition-colors">Pricing</Link>
-             <span className="text-slate-300">.</span>
-             <Link href="#developers" className="hover:text-black transition-colors">Developers</Link>
           </div>
 
-          <div className="flex items-center gap-6">
-            <Link href="/login" className="text-sm font-bold text-slate-900 hover:text-slate-600 transition-colors hidden sm:block">
+          <div className="flex items-center gap-4">
+            <Link href="/login" className="text-sm font-semibold text-slate-700 hover:text-black transition-colors hidden sm:block">
               Log in
             </Link>
             <Link href="/login">
-              <Button variant="outline" className="rounded-full px-6 border-slate-900 text-slate-900 hover:bg-slate-900 hover:text-white h-11 transition-all font-bold">
-                Get it Now — It&apos;s Free
+              <Button className="rounded-full px-5 bg-black hover:bg-slate-800 text-white h-10 text-sm font-semibold shadow-md">
+                Get Started Free
               </Button>
             </Link>
           </div>
@@ -73,25 +69,24 @@ export default function LandingPage() {
                 transition={{ duration: 0.8 }}
                 className="flex flex-col items-start max-w-xl"
               >
-                {/* User Badge - Dark Style */}
-                <div className="flex items-start gap-4 mb-12">
-                  <div className="w-12 h-12 bg-black rounded-full flex items-center justify-center text-white shrink-0">
-                      <Bot size={24} />
+                {/* User Badge */}
+                <div className="flex items-center gap-3 mb-10 bg-white/60 backdrop-blur-sm px-4 py-2 rounded-full border border-slate-200 w-fit">
+                  <div className="flex -space-x-2">
+                      <div className="w-8 h-8 rounded-full border-2 border-white bg-slate-200 overflow-hidden"><img src="https://i.pravatar.cc/100?img=1" alt="User" /></div>
+                      <div className="w-8 h-8 rounded-full border-2 border-white bg-slate-300 overflow-hidden"><img src="https://i.pravatar.cc/100?img=5" alt="User" /></div>
+                      <div className="w-8 h-8 rounded-full border-2 border-white bg-black text-white flex items-center justify-center text-xs font-bold">+5k</div>
                   </div>
-                  <div>
-                      <div className="text-lg font-bold text-slate-900 leading-none mb-1">20M+ User</div>
-                      <Link href="#stories" className="text-sm font-medium text-slate-600 underline hover:text-black decoration-slate-400 underline-offset-4">Read Our Success Stories</Link>
-                  </div>
+                  <span className="text-sm font-semibold text-slate-700">5,000+ Sales Teams</span>
                 </div>
 
                 {/* Headline */}
-                <h1 className={`${playfair.className} text-8xl lg:text-[9rem] leading-[0.85] font-medium text-black mb-12 tracking-tight`}>
-                  Grow<sup className="text-6xl font-light font-sans top-[-0.5em]">+</sup>
+                <h1 className={`${playfair.className} text-7xl lg:text-8xl leading-[0.9] font-medium text-black mb-8 tracking-tight`}>
+                  Auto<span className="italic">Sales</span><sup className="text-4xl font-light font-sans top-[-0.5em]">AI</sup>
                 </h1>
 
                 {/* Subhead */}
-                <p className="text-xl text-slate-600 leading-relaxed mb-12 max-w-md">
-                  Drive Sales Growth, And Harness Ai-Powered User Content — <span className="text-slate-900 font-medium">Up To 50× Faster.</span>
+                <p className="text-xl text-slate-600 leading-relaxed mb-10 max-w-lg">
+                  AI-Powered Lead Generation &amp; Calling. Find, qualify, and convert leads automatically — <span className="text-slate-900 font-semibold">50× faster than manual outreach.</span>
                 </p>
 
                 {/* Footer of Left Col: Reviews */}
@@ -107,15 +102,15 @@ export default function LandingPage() {
                     </div>
                 </div>
 
-                {/* Buttons Bottom */}
-                <div className="flex items-center gap-6">
+                {/* Buttons */}
+                <div className="flex items-center gap-5">
                   <Link href="/login">
-                      <Button className="h-14 px-8 rounded-full bg-black text-white hover:bg-slate-800 text-sm font-bold shadow-lg transition-transform hover:scale-105">
-                        Download — It&apos;s Free
+                      <Button className="h-13 px-8 rounded-full bg-black text-white hover:bg-slate-800 text-base font-semibold shadow-xl transition-transform hover:scale-105">
+                        Start Free Trial
                       </Button>
                   </Link>
-                  <Link href="#pricing" className="flex items-center gap-1 text-slate-600 hover:text-black font-semibold text-sm underline decoration-slate-300 underline-offset-4 decoration-2">
-                      Our Pricing <ArrowRight className="w-3 h-3 -rotate-45" />
+                  <Link href="#features" className="flex items-center gap-2 text-slate-600 hover:text-black font-semibold text-sm">
+                      See How It Works <ArrowRight className="w-4 h-4" />
                   </Link>
                 </div>
 
@@ -138,27 +133,27 @@ export default function LandingPage() {
 
                   {/* Floating Elements */}
                   
-                  {/* 1. Fit Check */}
+                  {/* 1. Lead Qualified */}
                   <div className="absolute top-[25%] left-[2rem] lg:left-[5rem] bg-white rounded-xl shadow-xl p-2 pr-4 flex items-center gap-3 animate-bounce-slow">
-                     <div className="w-8 h-8 rounded-lg bg-orange-400 flex items-center justify-center text-white shadow-sm">
+                     <div className="w-8 h-8 rounded-lg bg-emerald-500 flex items-center justify-center text-white shadow-sm">
                         <Check size={16} strokeWidth={4} />
                      </div>
-                     <span className="text-sm font-bold text-slate-800">How is the fit?</span>
+                     <span className="text-sm font-bold text-slate-800">Lead Qualified!</span>
                   </div>
 
-                  {/* 2. Design Check */}
+                  {/* 2. Call Scheduled */}
                   <div className="absolute top-[35%] left-[-1rem] lg:left-[2rem] bg-white rounded-xl shadow-xl p-2 pr-4 flex items-center gap-3 animate-bounce-delayed">
                      <div className="w-8 h-8 rounded-lg bg-blue-500 flex items-center justify-center text-white shadow-sm">
-                        <Check size={16} strokeWidth={4} />
+                        <Phone size={14} />
                      </div>
-                     <span className="text-sm font-bold text-slate-800">Do you like the design?</span>
+                     <span className="text-sm font-bold text-slate-800">AI Call Scheduled</span>
                   </div>
 
                    {/* 3. Stats Card (Top Right) */}
                   <div className="absolute top-[15%] right-0 bg-white/40 backdrop-blur-xl border border-white/50 p-6 rounded-3xl shadow-lg w-48">
-                      <div className="text-[10px] font-bold text-slate-600 mb-1 uppercase tracking-wider">Up to</div>
-                      <div className="text-5xl font-bold text-slate-900 mb-1 tracking-tighter">60%</div>
-                      <div className="text-xs font-semibold text-slate-700 leading-snug">More sales this week</div>
+                      <div className="text-[10px] font-bold text-slate-600 mb-1 uppercase tracking-wider">This Week</div>
+                      <div className="text-5xl font-bold text-slate-900 mb-1 tracking-tighter">847</div>
+                      <div className="text-xs font-semibold text-slate-700 leading-snug">Leads Generated</div>
                   </div>
 
                   {/* 4. Play button */}
@@ -166,18 +161,17 @@ export default function LandingPage() {
                       <Play className="fill-black text-black ml-1" />
                   </div>
 
-                  {/* 5. Product Card (Bottom Right) */}
-                  <div className="absolute bottom-[10%] right-[-2rem] bg-white/30 backdrop-blur-2xl border border-white/60 p-4 rounded-[2rem] shadow-2xl flex items-center gap-4 w-72 h-32">
-                      <div className="w-24 h-24 bg-white rounded-xl overflow-hidden p-2 shadow-inner">
-                         <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=1000&auto=format&fit=crop" alt="Shoe" className="object-contain w-full h-full" />
-                      </div>
-                      <div>
-                          <div className="text-sm font-semibold text-slate-900 leading-tight mb-1 opacity-80">Nike Shoes<br/>Jordan</div>
-                          <div className="text-2xl font-bold text-slate-900 tracking-tight">$849.99</div>
-                          <div className="flex items-center gap-1 mt-1 bg-white rounded-full px-2 py-0.5 w-fit shadow-sm">
-                              <Star className="w-3 h-3 fill-black text-black" /> 
-                              <span className="text-xs font-bold">4.6</span>
+                  {/* 5. Conversion Card (Bottom Right) */}
+                  <div className="absolute bottom-[10%] right-[-2rem] bg-white/30 backdrop-blur-2xl border border-white/60 p-5 rounded-[2rem] shadow-2xl w-64">
+                      <div className="flex items-center gap-3 mb-3">
+                          <div className="w-10 h-10 bg-black rounded-xl flex items-center justify-center text-white">
+                             <BarChart3 size={20} />
                           </div>
+                          <div className="text-sm font-bold text-slate-900">Conversion Rate</div>
+                      </div>
+                      <div className="text-3xl font-bold text-slate-900 mb-1">32.4%</div>
+                      <div className="flex items-center gap-1 text-emerald-600 text-xs font-semibold">
+                          <ArrowRight className="w-3 h-3 -rotate-45" /> +12% vs last week
                       </div>
                   </div>
               </motion.div>
