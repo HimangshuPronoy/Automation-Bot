@@ -221,38 +221,49 @@ export async function callLead(leadId: string): Promise<{ success: boolean; call
     return { success: false, error: 'Lead not found' };
   }
 
-  if (!lead.phoneNumber) {
+  // Database uses snake_case
+  const phoneNumber = lead.phone_number;
+  const businessName = lead.business_name;
+  const weakPointsRaw = lead.weak_points;
+  const suggestedPitch = lead.suggested_pitch;
+
+  if (!phoneNumber) {
     return { success: false, error: 'Lead has no phone number' };
   }
 
   // 2. Generate dynamic script
-  const weakPoints = lead.weakPoints ? JSON.parse(lead.weakPoints) : [];
+  const weakPoints = weakPointsRaw ? JSON.parse(weakPointsRaw) : [];
   const { systemPrompt, firstMessage } = await generateCallScript({
-    businessName: lead.businessName,
+    businessName: businessName || 'Business',
     weakPoints,
-    suggestedPitch: lead.suggestedPitch,
+    suggestedPitch,
   });
 
   try {
     // 3. Initiate call
+    console.log(`Initiating call to ${phoneNumber} for ${businessName}`);
+    
     const call = await initiateCall({
-      phoneNumber: lead.phoneNumber,
+      phoneNumber,
       systemPrompt,
       firstMessage,
       metadata: {
         leadId,
-        businessName: lead.businessName,
+        businessName,
       },
     });
+
+    console.log(`Call initiated successfully: ${call.id}`);
 
     // 4. Update lead status
     await db.from('leads').update({
       status: 'CONTACTED',
-      updatedAt: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
     }).eq('id', leadId);
 
     return { success: true, callId: call.id };
   } catch (error) {
+    console.error('Call initiation failed:', error);
     return { success: false, error: String(error) };
   }
 }
