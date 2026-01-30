@@ -3,14 +3,15 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
 // Initialize Stripe
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+// Initialize Stripe
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder', {
   typescript: true,
 });
 
 // Initialize Supabase Admin (for verifying user)
 const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
+  process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co',
+  process.env.SUPABASE_SERVICE_ROLE_KEY || 'placeholder-key'
 );
 
 /**
@@ -37,9 +38,9 @@ export async function POST(req: NextRequest) {
 
     // Map internal plans to Stripe Price IDs (or hardcode prices for now)
     // PRO TIP: In production, store these in DB or Env
-    let priceId = '';
-    if (plan === 'starter') priceId = 'price_1Q...'; // Replace with real ID
-    else if (plan === 'pro') priceId = 'price_1Q...';
+    // let priceId = '';
+    // if (plan === 'starter') priceId = 'price_1Q...'; 
+    // else if (plan === 'pro') priceId = 'price_1Q...';
 
     // For demo purposes, we will create a one-time price on the fly
     // In a real SaaS, you'd use Recurring Subscription prices created in Stripe Dashboard
