@@ -4,7 +4,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Settings, Package, LogOut, Home, DollarSign, FileText, BarChart2, BookOpen } from 'lucide-react';
+import { LayoutDashboard, Settings, Package, LogOut, Home, DollarSign, FileText, BarChart2, BookOpen, Mic } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useRouter } from "next/navigation";
 import { Toaster, toast } from "sonner";
@@ -27,7 +27,7 @@ export default function RootLayout({
   const [userName, setUserName] = useState<string>('');
   
   // Routes where we should show the sidebar navigation
-  const showNav = ['/campaigns', '/settings', '/packages', '/pricing', '/dashboard', '/deals', '/leads', '/quotes', '/analytics', '/knowledge'].some(path => pathname.startsWith(path));
+  const showNav = ['/campaigns', '/settings', '/packages', '/pricing', '/dashboard', '/deals', '/leads', '/quotes', '/analytics', '/knowledge', '/recordings'].some(path => pathname.startsWith(path));
 
   // Fetch user data on mount
   useEffect(() => {
@@ -87,6 +87,7 @@ export default function RootLayout({
                 <NavItem href="/packages" icon={<Package size={18}/>} label="Packages" active={pathname.startsWith('/packages')} />
                 <NavItem href="/settings" icon={<Settings size={18}/>} label="Settings" active={pathname.startsWith('/settings')} />
                 <NavItem href="/knowledge" icon={<BookOpen size={18}/>} label="Knowledge Base" active={pathname.startsWith('/knowledge')} />
+                <NavItem href="/recordings" icon={<Mic size={18}/>} label="Recordings" active={pathname.startsWith('/recordings')} />
               </nav>
 
               <div className="p-4 m-2 glass mt-auto rounded-xl">
