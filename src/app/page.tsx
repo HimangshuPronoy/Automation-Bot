@@ -1,402 +1,331 @@
-'use client';
-
-import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Globe, Bot, Phone, Sparkles, Users, BarChart3, Zap, ChevronRight, Play } from 'lucide-react';
+import { ArrowRight, Globe, Bot, Phone, BarChart3, ChevronRight, Play, Check, Star } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { Playfair_Display, Inter } from 'next/font/google';
 
+// Load fonts
+const playfair = Playfair_Display({ 
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-serif',
+});
 
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-sans',
+});
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-[#f8fafc] font-sans text-slate-900 overflow-x-hidden">
+    <div className={`min-h-screen bg-slate-50 font-sans text-slate-900 overflow-x-hidden ${playfair.variable} ${inter.variable}`}>
       
-      {/* Floating Navigation */}
-      <div className="fixed top-6 left-0 right-0 z-50 flex justify-center px-6">
-        <motion.nav 
+      {/* Navbar with blur */}
+      <nav className="fixed top-0 left-0 right-0 z-50 flex justify-center pt-6 px-6 pointer-events-none">
+        <motion.div 
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.5 }}
-          className="w-full max-w-5xl bg-white/90 backdrop-blur-xl border border-white/20 shadow-2xl shadow-slate-200/20 rounded-full px-6 py-3 flex justify-between items-center"
+          className="w-full max-w-[1400px] flex justify-between items-center pointer-events-auto"
         >
-          <div className="flex items-center gap-2 pl-2">
-            <span className="text-lg font-bold tracking-tight text-slate-900">AutoSales.ai</span>
+           {/* Logo */}
+          <div className="flex items-center gap-2">
+            <div className="w-10 h-10 bg-black rounded-xl flex items-center justify-center text-white">
+               <Bot size={24} />
+            </div>
+            <span className="text-xl font-bold tracking-tight text-slate-900">AutoSales.</span>
           </div>
-          <div className="hidden md:flex items-center gap-8">
-            <Link href="#features" className="text-sm font-medium text-slate-600 hover:text-emerald-600 transition-colors">Features</Link>
-            <Link href="#how-it-works" className="text-sm font-medium text-slate-600 hover:text-emerald-600 transition-colors">How it works</Link>
-            <Link href="#pricing" className="text-sm font-medium text-slate-600 hover:text-emerald-600 transition-colors">Pricing</Link>
+
+          <div className="hidden md:flex items-center gap-1 bg-white/80 backdrop-blur-md px-4 py-2 rounded-full border border-white/20 shadow-sm">
+            <Link href="#features" className="text-sm font-medium text-slate-600 hover:text-black px-4 py-2 rounded-full hover:bg-slate-100 transition-all">Features</Link>
+            <Link href="#how-it-works" className="text-sm font-medium text-slate-600 hover:text-black px-4 py-2 rounded-full hover:bg-slate-100 transition-all">How it works</Link>
+            <Link href="#pricing" className="text-sm font-medium text-slate-600 hover:text-black px-4 py-2 rounded-full hover:bg-slate-100 transition-all">Pricing</Link>
           </div>
+
           <div className="flex items-center gap-4">
-            <Link href="/login" className="text-sm font-medium text-slate-600 hover:text-emerald-600 transition-colors hidden sm:block">
+            <Link href="/login" className="text-sm font-medium text-slate-900 hover:text-slate-600 transition-colors hidden sm:block">
               Log in
             </Link>
             <Link href="/login">
-              <Button className="rounded-full px-6 bg-emerald-500 hover:bg-emerald-600 text-white shadow-lg shadow-emerald-500/25 transition-all hover:scale-105 h-10">
+              <Button className="rounded-full px-6 bg-black hover:bg-slate-800 text-white h-11 transition-all hover:scale-105">
                 Get Started
               </Button>
             </Link>
           </div>
-        </motion.nav>
-      </div>
+        </motion.div>
+      </nav>
 
-      {/* Hero Section with Dark Card */}
-      <section className="container mx-auto px-6 pt-32 pb-24">
-        <div className="relative">
-          {/* Dark Hero Card */}
-          <div className="relative bg-[#0f172a] rounded-[2.5rem] p-8 md:p-16 overflow-hidden shadow-2xl shadow-slate-200">
-            {/* Background decorations */}
-            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-emerald-500/10 rounded-full blur-[120px] pointer-events-none" />
-            <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-purple-500/10 rounded-full blur-[100px] pointer-events-none" />
-            
-            <div className="relative z-10 grid lg:grid-cols-2 gap-12 items-center">
-              {/* Left Content */}
-              <div className="text-left">
-                <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold text-white leading-[1.1] mb-6 tracking-tight">
-                  Unleash the full potential of{' '}
-                  <span className="text-emerald-400">AI Sales</span>
-                </h1>
-                
-                <p className="text-lg text-slate-400 mb-8 max-w-lg leading-relaxed">
-                  AutoSales.ai is a versatile assistant that utilizes state-of-the-art AI to find leads, 
-                  qualify them, and book meetings — all autonomously.
-                </p>
-                
-                <div className="flex flex-wrap gap-4 mb-12">
-                  <Link href="/login">
-                    <Button size="lg" className="h-14 px-8 rounded-full bg-emerald-500 hover:bg-emerald-600 text-white text-base font-medium shadow-xl shadow-emerald-500/20 transition-all hover:scale-105">
-                      Get the App <ArrowRight className="ml-2 h-5 w-5" />
-                    </Button>
-                  </Link>
-                  <Button size="lg" variant="outline" className="h-14 px-8 rounded-full border-slate-700 text-slate-300 bg-transparent hover:bg-slate-800 hover:text-white hover:border-slate-600">
-                    <Play className="mr-2 h-4 w-4 fill-current" /> Watch Demo
-                  </Button>
-                </div>
-                
-                {/* Stats */}
-                <div className="flex gap-12 border-t border-slate-800 pt-8">
-                  <div>
-                    <div className="text-3xl font-bold text-white mb-1">4.8</div>
-                    <div className="text-sm font-medium text-slate-500">Rating on AppStore</div>
-                  </div>
-                  <div>
-                    <div className="text-3xl font-bold text-white mb-1">700k+</div>
-                    <div className="text-sm font-medium text-slate-500">Active users</div>
-                  </div>
-                </div>
-              </div>
-              
-              {/* Right Side - Desktop Mockup */}
-              <motion.div 
-                initial={{ opacity: 0, y: 40 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                className="relative flex justify-center lg:justify-end"
-              >
-                <div className="relative w-full max-w-md">
-                   {/* Clean Glassy Card Mockup for Desktop App feeling */}
-                   <div className="relative bg-slate-900/50 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-1 shadow-2xl">
-                      {/* Window Controls */}
-                      <div className="h-8 bg-slate-800/50 rounded-t-xl flex items-center px-4 gap-2 border-b border-slate-700/50">
-                        <div className="w-3 h-3 rounded-full bg-red-500/80" />
-                        <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
-                        <div className="w-3 h-3 rounded-full bg-emerald-500/80" />
-                      </div>
-                      
-                      {/* Dashboard Content */}
-                      <div className="bg-slate-900 rounded-b-xl p-6 min-h-[300px] flex flex-col gap-4">
-                         {/* Header */}
-                         <div className="flex justify-between items-center mb-2">
-                            <div>
-                               <div className="text-sm font-medium text-slate-300">Dashboard</div>
-                               <div className="text-xs text-slate-500">Welcome back</div>
-                            </div>
-                            <div className="p-2 bg-emerald-500/10 rounded-lg">
-                               <Bot className="w-4 h-4 text-emerald-400" />
-                            </div>
-                         </div>
-                         
-                         {/* Stats Row */}
-                         <div className="grid grid-cols-2 gap-3">
-                            <div className="bg-slate-800/50 p-3 rounded-xl border border-slate-700/50">
-                               <div className="text-xs text-slate-400 mb-1">Total Leads</div>
-                               <div className="text-xl font-bold text-white">1,284</div>
-                            </div>
-                            <div className="bg-slate-800/50 p-3 rounded-xl border border-slate-700/50">
-                               <div className="text-xs text-slate-400 mb-1">Qualified</div>
-                               <div className="text-xl font-bold text-emerald-400">342</div>
-                            </div>
-                         </div>
-
-                         {/* Chart Placeholder */}
-                         <div className="bg-slate-800/30 rounded-xl p-3 border border-slate-700/50 flex-1 flex items-end gap-2 h-32 relative">
-                            {/* Mock bars */}
-                            <div className="w-1/6 bg-slate-700/50 h-[40%] rounded-t-sm" />
-                            <div className="w-1/6 bg-slate-700/50 h-[60%] rounded-t-sm" />
-                            <div className="w-1/6 bg-emerald-500/50 h-[80%] rounded-t-sm" />
-                            <div className="w-1/6 bg-emerald-500 h-[65%] rounded-t-sm" />
-                            <div className="w-1/6 bg-slate-700/50 h-[50%] rounded-t-sm" />
-                            <div className="w-1/6 bg-slate-700/50 h-[75%] rounded-t-sm" />
-                         </div>
-                      </div>
-                   </div>
-
-                   {/* Floating Badge */}
-                   <div className="absolute -left-6 top-1/2 -translate-y-1/2 bg-white p-4 rounded-xl shadow-xl shadow-black/20 animate-pulse">
-                      <div className="flex items-center gap-3">
-                         <div className="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center">
-                            <Phone className="w-5 h-5 text-emerald-600" />
-                         </div>
-                         <div>
-                            <div className="text-xs text-slate-500 font-medium">Auto-Dialer</div>
-                            <div className="text-sm font-bold text-slate-900">Active</div>
-                         </div>
-                      </div>
-                   </div>
-                </div>
-              </motion.div>
+      {/* Main Hero Section */}
+      <section className="relative pt-32 pb-12 lg:pt-40 lg:pb-24 px-6">
+        <div className="max-w-[1400px] mx-auto grid lg:grid-cols-2 gap-16 items-center">
+          
+          {/* Left Column - Typography & Actions */}
+          <motion.div 
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className="flex flex-col items-start"
+          >
+            {/* User Badge */}
+            <div className="flex items-center gap-4 mb-8 bg-white p-2 pr-6 rounded-full shadow-sm border border-slate-100 w-fit">
+               <div className="flex -space-x-3">
+                  <div className="w-10 h-10 rounded-full border-2 border-white bg-slate-200 flex items-center justify-center overflow-hidden"><img src="https://i.pravatar.cc/100?img=1" alt="User" /></div>
+                  <div className="w-10 h-10 rounded-full border-2 border-white bg-slate-300 flex items-center justify-center overflow-hidden"><img src="https://i.pravatar.cc/100?img=5" alt="User" /></div>
+                  <div className="w-10 h-10 rounded-full border-2 border-white bg-black text-white flex items-center justify-center text-xs font-bold">+2k</div>
+               </div>
+               <div>
+                  <div className="text-sm font-bold text-slate-900">20M+ User</div>
+                  <Link href="#testimonials" className="text-xs text-slate-500 hover:text-slate-900 underline decoration-slate-300 underline-offset-2">Read our Success Stories</Link>
+               </div>
             </div>
-          </div>
+
+            {/* Headline */}
+            <h1 className={`${playfair.className} text-7xl lg:text-[7rem] leading-[0.9] font-medium text-slate-900 mb-8 tracking-tighter`}>
+               Auto<span className="italic">Sales</span><sup className="text-4xl lg:text-5xl -top-8 lg:-top-16">+</sup>
+            </h1>
+
+            {/* Subhead */}
+            <p className="text-lg text-slate-500 max-w-lg leading-relaxed mb-10 font-light">
+               Drive Sales Growth, And Harness AI-Powered Automation to 
+               find, qualify, and convert leads — <span className="font-medium text-slate-900">Up to 50x Faster.</span>
+            </p>
+
+            {/* Reviews */}
+            <div className="flex items-center gap-4 mb-10 p-4 bg-white/50 rounded-2xl border border-slate-100 backdrop-blur-sm w-fit">
+               <div className="w-10 h-10 rounded-full bg-slate-100 overflow-hidden"><img src="https://i.pravatar.cc/100?img=32" alt="Reviewer" /></div>
+               <div>
+                  <div className="flex gap-1 text-slate-400">
+                     <p className="text-xs font-medium text-slate-900">Loved the performance</p>
+                     <span>/</span>
+                     <div className="flex text-black text-xs">
+                        <Star className="w-3 h-3 fill-black" /> 4.9
+                     </div>
+                  </div>
+                  <div className="text-xs text-slate-500">100% Satisfied</div>
+               </div>
+            </div>
+
+            {/* Buttons */}
+            <div className="flex items-center gap-6">
+               <Link href="/login">
+                  <Button className="h-14 px-10 rounded-full bg-black hover:bg-slate-800 text-white text-lg font-medium shadow-xl hover:shadow-2xl transition-all hover:-translate-y-1">
+                     Download — It&apos;s Free
+                  </Button>
+               </Link>
+               <Link href="#pricing" className="flex items-center gap-1 text-slate-500 hover:text-black font-medium transition-colors border-b border-transparent hover:border-black pb-0.5">
+                  Our Pricing <ArrowRight className="w-4 h-4 -rotate-45" />
+               </Link>
+            </div>
+
+          </motion.div>
+
+          {/* Right Column - Visual & Floating Cards */}
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            className="relative h-[600px] w-full"
+          >
+             {/* Main Image Container */}
+             <div className="absolute inset-0 rounded-[3rem] overflow-hidden">
+                {/* Background Gradient/Image */}
+                <div className="absolute inset-0 bg-gradient-to-br from-[#FF9A9E] to-[#FECFEF] opacity-30" />
+                <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=2576&auto=format&fit=crop')] bg-cover bg-center mix-blend-multiply opacity-90 grayscale-[20%]" />
+                
+                {/* Overlay Gradient for consistency */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+             </div>
+
+             {/* Floating Elements */}
+             
+             {/* 1. Fit Check (Top Left) */}
+             <motion.div 
+               initial={{ x: -20, opacity: 0 }}
+               animate={{ x: 0, opacity: 1 }}
+               transition={{ delay: 0.5, duration: 0.6 }}
+               className="absolute top-20 left-10 flex items-center gap-3 bg-white/90 backdrop-blur-xl p-3 px-4 rounded-2xl shadow-lg border border-white/40"
+             >
+                <div className="w-6 h-6 bg-orange-500 rounded-md flex items-center justify-center text-white">
+                   <Check size={14} strokeWidth={3} />
+                </div>
+                <span className="text-sm font-semibold text-slate-800">How is the fit?</span>
+             </motion.div>
+
+             {/* 2. Design Check (Top Left, lower) */}
+             <motion.div 
+               initial={{ x: -20, opacity: 0 }}
+               animate={{ x: 0, opacity: 1 }}
+               transition={{ delay: 0.7, duration: 0.6 }}
+               className="absolute top-36 left-[-10px] flex items-center gap-3 bg-white/90 backdrop-blur-xl p-3 px-4 rounded-2xl shadow-lg border border-white/40"
+             >
+                <div className="w-6 h-6 bg-blue-500 rounded-md flex items-center justify-center text-white">
+                   <Check size={14} strokeWidth={3} />
+                </div>
+                <span className="text-sm font-semibold text-slate-800">Do you like the design?</span>
+             </motion.div>
+
+             {/* 3. Sales Stats (Top Right) */}
+             <motion.div 
+               initial={{ y: -20, opacity: 0 }}
+               animate={{ y: 0, opacity: 1 }}
+               transition={{ delay: 0.9, duration: 0.6 }}
+               className="absolute top-16 right-[-20px] lg:right-10 bg-white/80 backdrop-blur-2xl p-5 rounded-3xl shadow-xl border border-white/50 w-48"
+             >
+                <div className="text-xs text-slate-500 mb-1 uppercase tracking-wider font-medium">Up to</div>
+                <div className="text-4xl font-bold text-slate-900 mb-1">60%</div>
+                <div className="text-xs text-slate-600 leading-snug">More sales this week</div>
+             </motion.div>
+
+             {/* 4. Play Button (Center) */}
+             <motion.div 
+               initial={{ scale: 0 }}
+               animate={{ scale: 1 }}
+               transition={{ delay: 1.0, type: "spring" }}
+               className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-2xl cursor-pointer hover:scale-110 transition-transform group"
+             >
+                <Play className="w-8 h-8 fill-slate-900 text-slate-900 ml-1 group-hover:text-emerald-500 group-hover:fill-emerald-500 transition-colors" />
+             </motion.div>
+
+             {/* 5. Product Card (Bottom Right) */}
+             <motion.div 
+               initial={{ y: 20, opacity: 0 }}
+               animate={{ y: 0, opacity: 1 }}
+               transition={{ delay: 1.1, duration: 0.6 }}
+               className="absolute bottom-16 -right-6 lg:right-[-30px] bg-white/60 backdrop-blur-xl p-4 rounded-[2rem] shadow-2xl border border-white/40 flex items-center gap-4 w-64"
+             >
+                <div className="w-20 h-20 bg-orange-100 rounded-2xl overflow-hidden relative">
+                   <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=1000&auto=format&fit=crop" alt="Shoe" className="object-cover w-full h-full mix-blend-multiply" />
+                </div>
+                <div>
+                   <div className="text-sm font-semibold text-slate-800 leading-tight mb-1">Standard Plan<br/>Campaign</div>
+                   <div className="text-lg font-bold text-slate-900">$849.99</div>
+                   <div className="flex items-center gap-1 mt-1 bg-white rounded-full px-2 py-0.5 w-fit shadow-sm">
+                      <Star className="w-3 h-3 fill-black text-black" /> 
+                      <span className="text-xs font-bold">4.6</span>
+                   </div>
+                </div>
+             </motion.div>
+
+          </motion.div>
+
+        </div>
+
+        {/* Logos Ticker */}
+        <div className="max-w-[1400px] mx-auto mt-24 flex flex-wrap justify-between items-center gap-8 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
+           {['Rakuten', 'NCR', 'monday.com', 'Disney', 'Dropbox'].map((logo) => (
+              <span key={logo} className="text-2xl font-bold text-slate-800 font-sans tracking-tight">{logo}</span>
+           ))}
         </div>
       </section>
 
-      {/* Features Section Title */}
-      <section id="features" className="container mx-auto px-6 py-16">
+      {/* Keep existing sections below but styled lighter */}
+      
+      {/* Features Section */}
+       <section id="features" className="container mx-auto px-6 py-24 bg-white rounded-[4rem] my-12">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-12"
+          className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-16"
         >
           <div>
-            <h2 className="text-4xl md:text-5xl font-bold text-slate-900 italic mb-4">Different destinations</h2>
-            <p className="text-slate-600 max-w-xl">
+            <h2 className={`${playfair.className} text-5xl md:text-6xl font-medium text-slate-900 mb-6`}>Different destinations</h2>
+            <p className="text-slate-500 max-w-xl text-lg">
               We explore the diverse ways in which this technology can revolutionize work across industries.
             </p>
           </div>
-          <Link href="#features" className="flex items-center gap-2 text-slate-900 font-medium hover:text-emerald-600 transition-colors">
+          <Link href="#features" className="flex items-center gap-2 text-slate-900 font-medium hover:text-emerald-600 transition-colors border-b border-black pb-1">
             Discover all applications <ChevronRight className="w-4 h-4" />
           </Link>
         </motion.div>
 
         {/* Bento Grid Features */}
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="grid md:grid-cols-3 gap-8">
           {/* Feature 1 - Large */}
-          <motion.div 
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="md:col-span-2 bg-white rounded-[2rem] p-8 border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300 group"
-          >
-            <div className="flex items-start justify-between mb-6">
-              <div className="w-14 h-14 bg-emerald-100 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
-                <Globe className="w-7 h-7 text-emerald-600" />
+          <div className="md:col-span-2 bg-slate-50 rounded-[3rem] p-10 border border-slate-100 hover:shadow-xl transition-all duration-300 group">
+            <div className="flex items-start justify-between mb-8">
+              <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
+                <Globe className="w-8 h-8 text-black" />
               </div>
-              <span className="text-xs font-medium text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full">LEAD GENERATION</span>
+              <span className="text-xs font-bold text-slate-900 bg-white px-4 py-2 rounded-full shadow-sm border border-slate-100">LEAD GENERATION</span>
             </div>
-            <h3 className="text-2xl font-bold text-slate-900 mb-3">Find Perfect Leads</h3>
-            <p className="text-slate-600 leading-relaxed">
-              Deep scraping of Google Maps, directories, and databases to curate verified business opportunities 
-              that match your ideal customer profile.
+            <h3 className={`${playfair.className} text-3xl font-medium text-slate-900 mb-4`}>Find Perfect Leads</h3>
+            <p className="text-slate-500 text-lg leading-relaxed max-w-md">
+              Deep scraping of Google Maps, directories, and databases to curate verified business opportunities.
             </p>
-          </motion.div>
+          </div>
 
           {/* Feature 2 */}
-          <motion.div 
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-            className="bg-slate-900 rounded-[2rem] p-8 text-white group"
-          >
-            <div className="w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-              <Bot className="w-7 h-7 text-emerald-400" />
+          <div className="bg-black rounded-[3rem] p-10 text-white group relative overflow-hidden">
+             <div className="absolute top-0 right-0 w-32 h-32 bg-slate-800 rounded-full blur-[50px] -mr-10 -mt-10"></div>
+            <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mb-8 backdrop-blur-md group-hover:scale-110 transition-transform relative z-10">
+              <Bot className="w-8 h-8 text-white" />
             </div>
-            <h3 className="text-2xl font-bold mb-3">AI Qualification</h3>
-            <p className="text-slate-400 leading-relaxed">
-              Computer vision analyzes business data to identify perfect matches for your offering.
+            <h3 className={`${playfair.className} text-3xl font-medium mb-4 relative z-10`}>AI Qualification</h3>
+            <p className="text-slate-400 text-lg leading-relaxed relative z-10">
+              Computer vision analyzes business data to identify perfect matches.
             </p>
-          </motion.div>
+          </div>
 
           {/* Feature 3 */}
-          <motion.div 
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-            className="bg-gradient-to-br from-emerald-500 to-teal-600 rounded-[2rem] p-8 text-white group"
-          >
-            <div className="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-              <Phone className="w-7 h-7 text-white" />
+          <div className="bg-[#FF9A9E] rounded-[3rem] p-10 text-white group relative overflow-hidden">
+             <div className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-black/10 to-transparent"></div>
+            <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mb-8 backdrop-blur-md group-hover:scale-110 transition-transform relative z-10">
+              <Phone className="w-8 h-8 text-white" />
             </div>
-            <h3 className="text-2xl font-bold mb-3">Voice Agents</h3>
-            <p className="text-emerald-100 leading-relaxed">
-              AI voice agents dial, pitch, and book meetings directly into your calendar.
+            <h3 className={`${playfair.className} text-3xl font-medium mb-4 relative z-10`}>Voice Agents</h3>
+            <p className="text-white/90 text-lg leading-relaxed relative z-10">
+              AI voice agents dial, pitch, and book meetings directly.
             </p>
-          </motion.div>
+          </div>
 
           {/* Feature 4 */}
-          <motion.div 
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.3 }}
-            className="md:col-span-2 bg-white rounded-[2rem] p-8 border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300 group"
-          >
-            <div className="flex items-start justify-between mb-6">
-              <div className="w-14 h-14 bg-purple-100 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
-                <BarChart3 className="w-7 h-7 text-purple-600" />
+          <div className="md:col-span-2 bg-slate-50 rounded-[3rem] p-10 border border-slate-100 hover:shadow-xl transition-all duration-300 group">
+            <div className="flex items-start justify-between mb-8">
+              <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
+                <BarChart3 className="w-8 h-8 text-purple-600" />
               </div>
-              <span className="text-xs font-medium text-purple-600 bg-purple-50 px-3 py-1 rounded-full">ANALYTICS</span>
+              <span className="text-xs font-bold text-slate-900 bg-white px-4 py-2 rounded-full shadow-sm border border-slate-100">ANALYTICS</span>
             </div>
-            <h3 className="text-2xl font-bold text-slate-900 mb-3">Real-time Dashboard</h3>
-            <p className="text-slate-600 leading-relaxed">
-              Track every lead, call, and conversion with beautiful analytics. Know exactly what&apos;s working 
-              and optimize your campaigns in real-time.
+            <h3 className={`${playfair.className} text-3xl font-medium text-slate-900 mb-4`}>Real-time Dashboard</h3>
+            <p className="text-slate-500 text-lg leading-relaxed max-w-md">
+              Track every lead, call, and conversion with beautiful analytics.
             </p>
-          </motion.div>
+          </div>
         </div>
       </section>
 
-      {/* How it Works */}
-      <section id="how-it-works" className="container mx-auto px-6 py-24">
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center max-w-2xl mx-auto mb-16"
-        >
-          <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4">How it works</h2>
-          <p className="text-lg text-slate-600">Three simple steps to automate your entire sales pipeline</p>
-        </motion.div>
-
-        <div className="grid md:grid-cols-3 gap-8">
-          {[
-            { num: "01", title: "Connect", desc: "Link your CRM, calendar, and phone system in minutes.", icon: <Zap className="w-6 h-6" /> },
-            { num: "02", title: "Configure", desc: "Define your ideal customer profile and let AI handle the rest.", icon: <Users className="w-6 h-6" /> },
-            { num: "03", title: "Convert", desc: "Watch as qualified meetings appear in your calendar.", icon: <Sparkles className="w-6 h-6" /> },
-          ].map((step, i) => (
-            <motion.div 
-              key={step.num}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.15 }}
-              className="relative bg-white rounded-[2rem] p-10 border border-slate-100 shadow-sm hover:shadow-lg transition-all group"
-            >
-              <div className="text-6xl font-bold text-slate-100 absolute top-6 right-8 group-hover:text-emerald-100 transition-colors">{step.num}</div>
-              <div className="relative z-10">
-                <div className="w-14 h-14 bg-emerald-100 rounded-2xl flex items-center justify-center mb-6 text-emerald-600 group-hover:scale-110 transition-transform">
-                  {step.icon}
-                </div>
-                <h3 className="text-2xl font-bold text-slate-900 mb-3">{step.title}</h3>
-                <p className="text-slate-600">{step.desc}</p>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </section>
-
-      {/* Pricing */}
-      <section id="pricing" className="container mx-auto px-6 py-24">
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center max-w-2xl mx-auto mb-16"
-        >
-          <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4">Simple pricing</h2>
-          <p className="text-lg text-slate-600">No hidden fees. Cancel anytime.</p>
-        </motion.div>
-
-        <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-          {[
-            { name: "Starter", price: "Free", desc: "For exploration", features: ["1 Campaign", "20 Leads/mo", "Manual Calling"] },
-            { name: "Pro", price: "$49", desc: "For acceleration", features: ["Unlimited Campaigns", "500 Leads/mo", "AI Voice Agents", "WhatsApp Integration"], popular: true },
-            { name: "Agency", price: "$199", desc: "For dominance", features: ["Unlimited Everything", "Team Seats", "API Access", "White Label"] }
-          ].map((plan, i) => (
-            <motion.div 
-              key={plan.name}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
-              className={`relative rounded-[2rem] p-8 ${plan.popular ? 'bg-slate-900 text-white scale-105 shadow-2xl' : 'bg-white border border-slate-200'}`}
-            >
-              {plan.popular && (
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-emerald-500 text-white text-xs font-bold rounded-full">
-                  MOST POPULAR
-                </div>
-              )}
-              <div className={`text-lg font-medium mb-2 ${plan.popular ? 'text-emerald-400' : 'text-slate-900'}`}>{plan.name}</div>
-              <div className="mb-6">
-                <span className="text-5xl font-bold">{plan.price}</span>
-                {plan.price !== 'Free' && <span className={`text-lg ${plan.popular ? 'text-slate-400' : 'text-slate-500'}`}>/mo</span>}
-              </div>
-              <p className={`mb-8 ${plan.popular ? 'text-slate-400' : 'text-slate-600'}`}>{plan.desc}</p>
-              <ul className="space-y-4 mb-8">
-                {plan.features.map((f) => (
-                  <li key={f} className="flex items-center gap-3">
-                    <div className={`w-5 h-5 rounded-full flex items-center justify-center ${plan.popular ? 'bg-emerald-500' : 'bg-emerald-100'}`}>
-                      <svg className={`w-3 h-3 ${plan.popular ? 'text-white' : 'text-emerald-600'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                      </svg>
-                    </div>
-                    <span className={plan.popular ? 'text-slate-300' : 'text-slate-600'}>{f}</span>
-                  </li>
-                ))}
-              </ul>
-              <Button className={`w-full h-12 rounded-full font-medium ${plan.popular ? 'bg-emerald-500 hover:bg-emerald-600 text-white' : 'bg-slate-100 hover:bg-slate-200 text-slate-900'}`}>
-                Get Started
-              </Button>
-            </motion.div>
-          ))}
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="container mx-auto px-6 py-24">
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          className="bg-gradient-to-r from-emerald-500 to-teal-600 rounded-[3rem] p-16 md:p-24 text-center text-white relative overflow-hidden"
-        >
-          <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-[80px]" />
-          <div className="absolute bottom-0 left-0 w-96 h-96 bg-emerald-400/20 rounded-full blur-[100px]" />
+      {/* CTA Section */}
+      <section className="container mx-auto px-6 pb-24">
+        <div className="bg-black rounded-[4rem] p-16 md:p-32 text-center text-white relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-purple-500/30 rounded-full blur-[120px] pointer-events-none"></div>
           
-          <div className="relative z-10">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">Ready to automate your sales?</h2>
-            <p className="text-lg text-emerald-100 mb-10 max-w-xl mx-auto">
-              Join thousands of businesses already using AutoSales.ai to grow faster.
+          <div className="relative z-10 max-w-3xl mx-auto">
+            <h2 className={`${playfair.className} text-5xl md:text-7xl font-medium mb-8`}>Ready to <span className="italic">scale</span>?</h2>
+            <p className="text-xl text-slate-400 mb-12">
+              Join thousands of businesses already using AutoSales.ai to grow 50x faster.
             </p>
-            <Link href="/login">
-              <Button size="lg" className="h-14 px-10 rounded-full bg-white text-emerald-600 hover:bg-emerald-50 text-base font-medium shadow-xl transition-transform hover:scale-105">
-                Start Free Trial <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-            </Link>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+               <Link href="/login">
+                  <Button className="h-16 px-12 rounded-full bg-white text-black hover:bg-slate-200 text-xl font-medium transition-transform hover:scale-105">
+                     Start Free Trial
+                  </Button>
+               </Link>
+               <span className="text-slate-500 text-sm mt-2 sm:mt-0 px-4">No credit card required</span>
+            </div>
           </div>
-        </motion.div>
+        </div>
       </section>
 
-      {/* Footer */}
-      <footer className="container mx-auto px-6 py-12 border-t border-slate-100">
-        <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center">
-              <Sparkles className="w-4 h-4 text-white" />
-            </div>
-            <span className="font-bold">AutoSales.ai</span>
-          </div>
-          <div className="flex gap-8 text-sm text-slate-500">
-            <Link href="#" className="hover:text-slate-900 transition-colors">Privacy</Link>
-            <Link href="#" className="hover:text-slate-900 transition-colors">Terms</Link>
-            <Link href="#" className="hover:text-slate-900 transition-colors">Contact</Link>
-          </div>
-          <p className="text-sm text-slate-400">
-            © {new Date().getFullYear()} AutoSales.ai. All rights reserved.
-          </p>
-        </div>
+      {/* Simple Footer */}
+      <footer className="container mx-auto px-6 py-12 border-t border-slate-200 flex justify-between items-center text-sm text-slate-500">
+         <p>© 2024 AutoSales.ai</p>
+         <div className="flex gap-6">
+            <a href="#" className="hover:text-black">Terms</a>
+            <a href="#" className="hover:text-black">Privacy</a>
+            <a href="#" className="hover:text-black">Twitter</a>
+         </div>
       </footer>
     </div>
   );
