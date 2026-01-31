@@ -59,29 +59,52 @@ export async function analyzeLead(business: ScrapedBusiness): Promise<LeadAnalys
     RETURN JSON ONLY.
   `;
 
-  try {
-    const { object } = await generateObject({
-      model: google('gemini-2.0-flash'),
-      schema: AnalysisSchema,
-      prompt: prompt,
-    });
-    
-    // Override qualification if settings disqualify them
-    if (disqualified) {
-      object.qualified = false;
-      object.summary = "Does not meet qualification criteria";
+  // Helper function for delay
+  const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+  // Retry logic with exponential backoff
+  let lastError: unknown;
+  for (let attempt = 0; attempt < 3; attempt++) {
+    try {
+      // Add delay between attempts to avoid rate limits
+      if (attempt > 0) {
+        const waitTime = Math.pow(2, attempt) * 5000; // 5s, 10s, 20s
+        console.log(`Analyzer: Retrying in ${waitTime/1000}s (attempt ${attempt + 1}/3)`);
+        await delay(waitTime);
+      }
+
+      const { object } = await generateObject({
+        model: google('gemini-2.0-flash'),
+        schema: AnalysisSchema,
+        prompt: prompt,
+      });
+      
+      // Override qualification if settings disqualify them
+      if (disqualified) {
+        object.qualified = false;
+        object.summary = "Does not meet qualification criteria";
+      }
+      
+      return object;
+    } catch (error) {
+      lastError = error;
+      console.error(`Analyzer: Attempt ${attempt + 1} failed:`, error);
+      
+      // Check if it's a rate limit error and should retry
+      if (String(error).includes('429') || String(error).includes('quota')) {
+        continue; // Retry
+      }
+      break; // Don't retry other errors
     }
-    
-    return object;
-  } catch (error) {
-    console.error("Analysis failed:", error);
-    // Fallback or re-throw
-    return {
-      score: 0,
-      summary: "Analysis failed",
-      weakPoints: [],
-      qualified: false,
-      suggestedPitch: "",
-    };
   }
+
+  console.error("Analysis failed after all retries:", lastError);
+  // Fallback - return basic analysis without AI
+  return {
+    score: 50,
+    qualified: !disqualified,
+    summary: "Analysis pending - API rate limited",
+    weakPoints: [],
+    suggestedPitch: "Please review this lead manually",
+  };
 }
