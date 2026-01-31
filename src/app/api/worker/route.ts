@@ -21,15 +21,22 @@ export async function GET(req: NextRequest) {
   }
 
   try {
+    // First, let's see what statuses exist
+    const { data: allJobs } = await db
+      .from('scrape_jobs')
+      .select('id, status, campaignId')
+      .limit(10);
+    console.log('Worker: All jobs in DB:', allJobs?.map(j => ({ id: j.id.slice(0,8), status: j.status })));
+    
     // Fetch pending jobs - check for both uppercase and lowercase status
     let { data: jobs, error } = await db
       .from('scrape_jobs')
       .select('id, status')
-      .in('status', ['PENDING', 'pending', 'Pending'])
+      .in('status', ['PENDING', 'pending', 'Pending', 'PROCESSING', 'processing'])
       .order('createdAt', { ascending: true })
       .limit(5);
 
-    console.log('Worker: Found pending jobs:', jobs?.length || 0);
+    console.log('Worker: Found pending/processing jobs:', jobs?.length || 0, jobs?.map(j => j.status));
 
     if (error) {
       console.error('Worker: Error fetching jobs:', error);
@@ -40,29 +47,37 @@ export async function GET(req: NextRequest) {
     if (!jobs || jobs.length === 0) {
       console.log('Worker: No pending jobs. Checking for campaigns without jobs...');
       
-      // Get campaigns that have no completed jobs
-      const { data: campaigns } = await db
+      // Get all campaigns
+      const { data: campaigns, error: campError } = await db
         .from('campaigns')
         .select('id, query')
         .limit(5);
       
+      console.log('Worker: Found campaigns:', campaigns?.length || 0, campError);
+      
       if (campaigns && campaigns.length > 0) {
-        // Create pending jobs for these campaigns
+        // Create pending jobs for campaigns without PENDING or PROCESSING jobs
         for (const camp of campaigns) {
-          // Check if campaign already has a recent job
-          const { data: existingJob } = await db
+          // Check if campaign has an active job (PENDING or PROCESSING)
+          const { data: existingJob, error: jobErr } = await db
             .from('scrape_jobs')
-            .select('id')
+            .select('id, status')
             .eq('campaignId', camp.id)
+            .in('status', ['PENDING', 'PROCESSING'])
             .limit(1);
           
+          console.log(`Worker: Campaign ${camp.id} has active job:`, existingJob?.length || 0, jobErr);
+          
           if (!existingJob || existingJob.length === 0) {
-            console.log('Worker: Creating job for campaign:', camp.id);
-            await db.from('scrape_jobs').insert({
+            console.log('Worker: Creating job for campaign:', camp.id, 'query:', camp.query);
+            const { error: insertErr } = await db.from('scrape_jobs').insert({
               campaignId: camp.id,
               query: camp.query,
               status: 'PENDING'
             });
+            if (insertErr) {
+              console.error('Worker: Failed to create job:', insertErr);
+            }
           }
         }
         
