@@ -13,13 +13,13 @@ import { formatDistanceToNow } from 'date-fns';
 
 interface Lead {
   id: string;
-  business_name?: string;
+  businessName?: string;
   first_name?: string;
   last_name?: string;
   email?: string;
   status: string;
-  created_at: string;
-  campaign_id?: string;
+  createdAt: string;
+  campaignId?: string;
   campaigns?: { name: string } | null;
 }
 
@@ -117,7 +117,7 @@ export default function Dashboard() {
         const { data: leads } = await supabase
           .from('leads')
           .select('*, campaigns(name)')
-          .order('created_at', { ascending: false })
+          .order('createdAt', { ascending: false })
           .limit(5);
 
         if (leads) {
@@ -134,7 +134,7 @@ export default function Dashboard() {
   }, []);
 
   const getLeadDisplayName = (lead: Lead) => {
-    if (lead.business_name) return lead.business_name;
+    if (lead.businessName) return lead.businessName;
     if (lead.first_name || lead.last_name) return `${lead.first_name || ''} ${lead.last_name || ''}`.trim();
     return lead.email || 'Unknown Lead';
   };
@@ -324,7 +324,7 @@ export default function Dashboard() {
                               </span>
                               <div className="text-right min-w-[100px]">
                                 <span className="text-sm font-medium text-slate-900 block group-hover:translate-x-1 transition-transform">
-                                  {getTimeAgo(lead.created_at)}
+                                  {getTimeAgo(lead.createdAt)}
                                 </span>
                                 <span className="text-xs text-slate-400">Changed status</span>
                               </div>
