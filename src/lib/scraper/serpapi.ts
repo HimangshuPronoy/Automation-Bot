@@ -62,6 +62,8 @@ export async function scrapeWithSerpAPI(query: string, limit: number = 20): Prom
  * Process a single scrape job
  */
 export async function processJob(jobId: string) {
+  console.log('processJob: Starting job', jobId);
+  
   // 1. Get job details
   const { data: job, error: jobError } = await db
     .from('scrape_jobs')
@@ -70,39 +72,29 @@ export async function processJob(jobId: string) {
     .single();
 
   if (jobError || !job) {
-    console.error("Job not found:", jobId);
+    console.error("processJob: Job not found:", jobId, jobError);
     return;
   }
+
+  console.log('processJob: Found job with query:', job.query);
 
   // 2. Mark as processing
   await db.from('scrape_jobs').update({ status: 'PROCESSING' }).eq('id', jobId);
 
   try {
     // 3. Fetch results from SerpAPI
+    console.log('processJob: Calling SerpAPI for query:', job.query);
     const results = await scrapeWithSerpAPI(job.query, 20);
+    console.log('processJob: Got', results.length, 'results from SerpAPI');
 
     // 4. Analyze and save each lead
     let savedCount = 0;
     for (const result of results) {
-      // DEDUPLICATION: Check if lead already exists by place_id, phone, or business name
+      // DEDUPLICATION: Check by phone or business name
       let isDuplicate = false;
 
-      // First check by place_id (most reliable - Google's unique identifier)
-      if (result.place_id) {
-        const { data: byPlaceId } = await db
-          .from('leads')
-          .select('id')
-          .eq('place_id', result.place_id)
-          .limit(1);
-        
-        if (byPlaceId && byPlaceId.length > 0) {
-          console.log(`Skipping duplicate lead (place_id match): ${result.title}`);
-          isDuplicate = true;
-        }
-      }
-
-      // Then check by phone number (if not already found and phone exists)
-      if (!isDuplicate && result.phone) {
+      // Check by phone number
+      if (result.phone) {
         const { data: byPhone } = await db
           .from('leads')
           .select('id')
@@ -115,7 +107,7 @@ export async function processJob(jobId: string) {
         }
       }
 
-      // Finally check by exact business name (least reliable but catches remaining duplicates)
+      // Check by exact business name
       if (!isDuplicate) {
         const { data: byName } = await db
           .from('leads')
@@ -133,19 +125,10 @@ export async function processJob(jobId: string) {
         continue;
       }
 
-      // Skip AI analysis for now (quota issues) - just save leads
-      const analysis = null;
-      // TODO: Re-enable when API quota is available
-      // try {
-      //   analysis = await analyzeLead({...});
-      // } catch (e) {
-      //   console.error("Analysis failed for", result.title);
-      // }
-
-      // Save lead with camelCase field names
-      await db.from('leads').insert({
+      // Save lead (no placeId - column doesn't exist in DB)
+      console.log('processJob: Saving lead:', result.title);
+      const { error: insertError } = await db.from('leads').insert({
         businessName: result.title,
-        place_id: result.place_id,
         phoneNumber: result.phone,
         website: result.website,
         address: result.address,
@@ -157,7 +140,12 @@ export async function processJob(jobId: string) {
         campaignId: job.campaignId,
       });
 
-      savedCount++;
+      if (insertError) {
+        console.error('processJob: Failed to save lead:', result.title, insertError);
+      } else {
+        savedCount++;
+        console.log('processJob: Saved lead #', savedCount);
+      }
     }
 
     // 5. Mark job as completed
