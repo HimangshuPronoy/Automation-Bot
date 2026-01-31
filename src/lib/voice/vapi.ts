@@ -256,10 +256,14 @@ export async function callLead(leadId: string): Promise<{ success: boolean; call
     console.log(`Call initiated successfully: ${call.id}`);
 
     // 4. Update lead status
-    await db.from('leads').update({
+    const { error: updateError } = await db.from('leads').update({
       status: 'CONTACTED',
-      updated_at: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     }).eq('id', leadId);
+
+    if (updateError) {
+      console.error('Failed to update lead status:', updateError);
+    }
 
     return { success: true, callId: call.id };
   } catch (error) {
