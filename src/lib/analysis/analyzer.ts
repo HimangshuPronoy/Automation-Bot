@@ -74,7 +74,7 @@ export async function analyzeLead(business: ScrapedBusiness): Promise<LeadAnalys
       }
 
       const { object } = await generateObject({
-        model: google('gemini-2.0-flash'),
+        model: google('gemini-2.5-flash-preview-05-20'),
         schema: AnalysisSchema,
         prompt: prompt,
       });

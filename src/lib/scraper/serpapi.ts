@@ -133,20 +133,14 @@ export async function processJob(jobId: string) {
         continue;
       }
 
-      // Analyze with AI
-      let analysis = null;
-      try {
-        analysis = await analyzeLead({
-          name: result.title,
-          phone: result.phone,
-          website: result.website,
-          address: result.address,
-          rating: result.rating,
-          reviews: result.reviews,
-        });
-      } catch (e) {
-        console.error("Analysis failed for", result.title);
-      }
+      // Skip AI analysis for now (quota issues) - just save leads
+      const analysis = null;
+      // TODO: Re-enable when API quota is available
+      // try {
+      //   analysis = await analyzeLead({...});
+      // } catch (e) {
+      //   console.error("Analysis failed for", result.title);
+      // }
 
       // Save lead with camelCase field names
       await db.from('leads').insert({
@@ -157,9 +151,9 @@ export async function processJob(jobId: string) {
         address: result.address,
         rating: result.rating,
         reviewCount: result.reviews,
-        status: analysis?.qualified ? 'QUALIFIED' : 'NEW',
-        weakPoints: analysis ? JSON.stringify(analysis.weakPoints) : '[]',
-        suggestedPitch: analysis?.suggestedPitch || '',
+        status: 'NEW',
+        weakPoints: '[]',
+        suggestedPitch: '',
         campaignId: job.campaignId,
       });
 
