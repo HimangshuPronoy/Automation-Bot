@@ -268,6 +268,14 @@ export async function callLead(leadId: string): Promise<{ success: boolean; call
     return { success: true, callId: call.id };
   } catch (error) {
     console.error('Call initiation failed:', error);
+    
+    // Prevent infinite retries by marking as CONTACTED (with error logged)
+    // We update status so the auto-caller moves to the next lead
+    await db.from('leads').update({
+      status: 'CONTACTED', 
+      updatedAt: new Date().toISOString(),
+    }).eq('id', leadId);
+
     return { success: false, error: String(error) };
   }
 }
