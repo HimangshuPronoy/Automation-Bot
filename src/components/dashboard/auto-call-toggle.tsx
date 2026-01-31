@@ -35,7 +35,7 @@ export function AutoCallToggle() {
     // Get next NEW lead
     const { data: leads } = await supabase
       .from('leads')
-      .select('id, business_name, phone_number')
+      .select('id, businessName, phoneNumber')
       .eq('status', 'NEW')
       .limit(1);
     
@@ -50,8 +50,8 @@ export function AutoCallToggle() {
     // Update UI to show calling
     setCurrentCall({
       leadId: lead.id,
-      businessName: lead.business_name || 'Unknown Business',
-      phoneNumber: lead.phone_number || 'No phone',
+      businessName: lead.businessName || 'Unknown Business',
+      phoneNumber: lead.phoneNumber || 'No phone',
       status: 'dialing'
     });
     
