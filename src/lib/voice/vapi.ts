@@ -50,7 +50,7 @@ export async function initiateCall(options: VapiCallOptions): Promise<VapiCallRe
       number: options.phoneNumber,
     },
     // Enable call recording
-    recordingEnabled: true,
+    // recordingEnabled: true, // Deprecated/Invalid property
   };
 
   // Use pre-configured assistant or dynamic prompt

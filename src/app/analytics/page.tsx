@@ -72,8 +72,8 @@ export default function AnalyticsPage() {
 
     const { data: recentLeads } = await db
       .from('leads')
-      .select('created_at')
-      .gte('created_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString());
+      .select('createdAt')
+      .gte('createdAt', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString());
 
     const dayMap: Record<string, number> = {};
     for (let i = 6; i >= 0; i--) {
@@ -82,7 +82,7 @@ export default function AnalyticsPage() {
       dayMap[key] = 0;
     }
     recentLeads?.forEach(lead => {
-      const key = new Date(lead.created_at).toLocaleDateString('en-US', { weekday: 'short' });
+      const key = new Date(lead.createdAt).toLocaleDateString('en-US', { weekday: 'short' });
       if (dayMap[key] !== undefined) dayMap[key]++;
     });
     setLeadsByDay(Object.entries(dayMap).map(([day, leads]) => ({ day, leads })));
@@ -92,9 +92,9 @@ export default function AnalyticsPage() {
     
     const { data: paidQuotes } = await db
       .from('quotes')
-      .select('amount, created_at')
+      .select('amount, createdAt')
       .eq('status', 'PAID')
-      .gte('created_at', sixMonthsAgo.toISOString());
+      .gte('createdAt', sixMonthsAgo.toISOString());
     
     const monthlyRevenue: Record<string, number> = {};
     const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -107,7 +107,7 @@ export default function AnalyticsPage() {
     }
     
     paidQuotes?.forEach(quote => {
-      const quoteDate = new Date(quote.created_at);
+      const quoteDate = new Date(quote.createdAt);
       const monthKey = monthNames[quoteDate.getMonth()];
       if (monthlyRevenue[monthKey] !== undefined) {
         monthlyRevenue[monthKey] += (quote.amount || 0) / 100;

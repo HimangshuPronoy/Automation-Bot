@@ -43,12 +43,12 @@ export function DashboardCharts() {
         const sevenDaysAgo = subDays(new Date(), 7);
         const { data: leads } = await supabase
           .from('leads')
-          .select('created_at, status')
-          .gte('created_at', sevenDaysAgo.toISOString());
+          .select('createdAt, status')
+          .gte('createdAt', sevenDaysAgo.toISOString());
 
         if (leads) {
           leads.forEach(lead => {
-            const leadDate = new Date(lead.created_at);
+            const leadDate = new Date(lead.createdAt);
             const dayIndex = last7Days.findIndex(d => 
               format(d.date, 'yyyy-MM-dd') === format(leadDate, 'yyyy-MM-dd')
             );
@@ -73,14 +73,14 @@ export function DashboardCharts() {
         // Fetch today's contacted leads (as proxy for calls)
         const { data: todayLeads } = await supabase
           .from('leads')
-          .select('created_at, status')
-          .gte('created_at', todayStart.toISOString())
-          .lte('created_at', todayEnd.toISOString())
+          .select('createdAt, status')
+          .gte('createdAt', todayStart.toISOString())
+          .lte('createdAt', todayEnd.toISOString())
           .in('status', ['CONTACTED', 'QUALIFIED', 'NOT_INTERESTED', 'CALL_BACK']);
 
         if (todayLeads) {
           todayLeads.forEach(lead => {
-            const hour = new Date(lead.created_at).getHours();
+            const hour = new Date(lead.createdAt).getHours();
             const hourIndex = hour - 9; // Map 9AM = index 0
             if (hourIndex >= 0 && hourIndex < hourlyData.length) {
               hourlyData[hourIndex].calls += 1;
